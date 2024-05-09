@@ -1,0 +1,83 @@
+﻿@{
+    var request = Context.Request;
+    var host = request.Host;
+    var scheme = request.Scheme;
+    var url = $"{scheme}://{host}";
+}
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Použití aplikace</title>
+</head>
+<body>
+    <h1>Aplikace pro ukázku použití ASP.NET Core backendových funkcionalit vytvořená do prázdného ASP.NET Core projektu</h1>
+    <ul>
+        <li>Minimalistické routování</li>
+        <li>MVC routování a použití tag a html helperu</li>
+        <li>Použití cache a generické třídy Lazy, aby nebyl zbytečně vytěžován backend</li>
+        <li>Registrace vlastní služby do IoC/DI kontejneru a její použití v controlleru přes coinstructor dependency injection</li>
+        <li>Registrace vlastní služby do IoC/DI kontejneru a její použití přes scopeFactory (lze vidět na konzoli u webserveru)</li>
+        <li>Registrace a použití vlastního middleware pro logování bez a s parametrem (lze vidět na konzoli u webserveru)</li>
+        <li>Registrace a použití vlastní služby na pozadí (BackgroundService, lze vidět na konzoli u webserveru)</li>
+    </ul>
+    <h2>Minimalistické routování (routu doplňte za url webové stránky)</h2>
+    <ul>
+        <li>
+            <h3>/R1?s=hodnota</h3>
+            <code>app.MapGet("/R1", ([FromQuery] string? s) => "Routa /R1 s nepovinnym stringovym query parametrem: " + s);</code>
+        </li>
+        <li>
+            <h3>/R2/4</h3>
+            <code>MapGet("/R2/{p:int:range(2,8)?}", (int? p) => "Routa /R2 s nepovinnym int (s range 2 až 8) parametrem: " + p.ToString());</code>
+        </li>
+        <li>
+            <h3>/ip/192.168.0.2</h3>
+            <code>app.MapGet("/IP/{ip:ip?}", (string? ip) => $"Zadal jsi ip adresu: {ip}");</code>
+        </li>
+        <li>
+            <h3>/redirect/kytary.cz</h3>
+            <code>app.MapGet("/redirect/{adresa}", (string adresa) => Results.Redirect($"https://{adresa}"));</code>
+        </li>
+    </ul>
+    <h2>MVC routování (buď opět routu doplnit za url webové stránky, nebo je tam proklik)</h2>
+    <ul>
+        <li>
+            <h3>/</h3>
+            <code>Úvodní stránka (Controller1, Akce1) </code>
+        </li>
+        <li>
+            <h3>/Akce2/hodnota</h3>
+            <code>Controller1 Akce2 s dekorativnim atibutem[Route("Akce2/{p?}")]</code>
+        </li>
+        <li>
+            <h3>/Akce3?p=hodnota</h3>
+            <code>Controller1 Akce3 [FromQuery] string? p</code>
+        </li>
+        <li>
+            <h3><a href="@(url+"/Controller2/Akce1")">/Controller2/Akce1</a></h3>
+            <code>Zde je ukazka pouziti view a modelu pro Get i Post na Controller1 Akce1. Je zde vidět i správné použití cache pomocí generické třídy Lazy</code>
+        </li>        
+        <li>
+            <h3><a href="@(url+"/Async/kytary.cz")">/Async/kytary.cz</a></h3>
+            <code>Zjistí asynchronně počet znaků na zadané html stránce (zadat bez http/https) například v tomto případě Kytary.cz, ale můžete zadat i jinou html stránku</code>
+        </li>
+    </ul>
+    <h2>Constructor Dependenci Injection - 3 zpusoby registrace stejné třídy MojeSluzba do IoC/DI kontejneru a jejich použití pomocí constructor dependenci injection v Controller2</h2>
+    <ul>
+        <li>
+            <h3><a href="@(url+"/MojeSluzbaSingleton")">/MojeSluzbaSingleton</a></h3>
+            <code>Ukázka získání dvo instancí stejné služby přes constructor DI, zde budou mit obě instance stejnou hodnotu po celý běh aplikace</code>
+        </li>
+        <li>
+            <h3><a href="@(url+"/MojeSluzbaScoped")">/MojeSluzbaScoped</a></h3>
+            <code>Ukázka získání dvo instancí stejné služby přes constructor DI, zde budou mit obě instance stejnou hodnotu pro jeden http požadavek</code>
+        </li>
+        <li>
+            <h3><a href="@(url+"/MojeSluzbaTransient")">/MojeSluzbaTransient</a></h3>
+            <code>Ukázka získání dvo instancí stejné služby přes constructor DI, zde budou mít obě instance velmi pravděpodobně jiné hodnoty</code>
+        </li>
+    </ul>
+</body>
+</html>

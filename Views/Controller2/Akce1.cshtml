@@ -1,0 +1,48 @@
+﻿@model Osoba
+@{
+    ViewData["Title"] = "Editace Osoby";
+}
+
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <!-- Ty javascripty jsou pro validace -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+</head>
+
+<body>
+    <h1>Hodnoty</h1>
+    <ul>
+        <li>@Model.Jmeno</li>
+        <li>@Model.Vek</li>
+        <li>@Html.DisplayName("Vek")</li> <!-- Zobrazi popisek z atributu z modelu z [Display(Name = "Věk")] -->
+        <li>@Html.Display("Vek")</li> <!-- Zobrazi naformatovanou hodnotu z modelu dle [DisplayFormat(DataFormatString = "{0:D3}")] -->
+        <li>ViewData: @ViewData["hodnota"]</li>
+        <li>ViewBag: @ViewBag.hodnota1</li>
+        <li>Aktuální datum z cache aktualizované každých 10 vteřin: <cache vary-by="Pokud chci mi ruzne verze cache pro ruzne stringy, pouziji tento atribut" expires-after="TimeSpan.FromSeconds(10)">@Model.AktualniDatum.Value</cache></li>
+    </ul>
+    <hr>
+    <form asp-action="Akce1">
+        <!-- Akce1 je nazev metody v controlleru, kdyz nemam asp-controller="", tak se vola ten, ktery zavolal toto view -->
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="Jmeno"></label>
+            <input asp-for="Jmeno" class="form-control" />
+            <span asp-validation-for="Jmeno" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Vek"></label>
+            <input asp-for="Vek" class="form-control" />
+            <span asp-validation-for="Vek" class="text-danger"></span>
+        </div>
+        <div class="form-group mt-3">
+            <input type="submit" value="Uloz" class="btn btn-primary" />
+        </div>
+    </form>
+    <a asp-controller="Controller1" asp-action="Akce1">Zpet na root</a>
+
+</body>
+</html>
