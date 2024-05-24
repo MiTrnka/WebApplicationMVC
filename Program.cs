@@ -31,6 +31,7 @@ app.MapGet("/R1", ([FromQuery] string? s) => "Routa /R1 s nepovinnym stringovym 
 app.MapGet("/R2/{p:int:range(2,8)?}", (int? p) => "Routa /R2 s nepovinnym int (s range 2 a 8) parametrem (/R2/4): " + p.ToString());
 app.MapGet("/IP/{ip:ip?}", (string? ip) => $"Zadal jsi ip adresu: {ip}"); //validuje parametr dle vlastní tøídy IpRouteConstraint
 app.MapGet("/redirect/{adresa}", (string adresa) => Results.Redirect($"https://{adresa}"));
+app.MapGet("/r10",() => "ahoj");
 
 //Nastavení MVC routování, prohledá projekt a najde všechny tøídy kontrolerù, které jsou umístìné v jakémkoli adresáøi (nejen v Controllers) a vytvoøí pro nì odpovídající routy 
 app.MapControllers();
